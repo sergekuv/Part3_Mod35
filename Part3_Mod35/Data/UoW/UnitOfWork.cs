@@ -16,10 +16,6 @@ namespace Part3_Mod35.Data.UoW
             this._appContext = app;
         }
 
-        public void Dispose()
-        {
-        }
-
         public IRepository<TEntity> GetRepository<TEntity>(bool hasCustomRepository = true) where TEntity : class
         {
             if (_repositories == null)
@@ -48,6 +44,9 @@ namespace Part3_Mod35.Data.UoW
         public int SaveChanges(bool ensureAutoHistory = false)
         {
             throw new NotImplementedException();
+        }
+        public void Dispose()
+        {
         }
     }
 }

@@ -12,8 +12,25 @@ namespace Part3_Mod35.Data.Repository
         public FriendsRepository(ApplicationDbContext db) : base(db)
         {
         }
+        public async Task AddFriend (User target, User Friend)
+        {
+            var friends = Set.AsEnumerable().FirstOrDefault(x => x.UserId == target.Id && x.CurrentFriendId == Friend.Id);
 
-        public void AddFriend (User target, User Friend)
+            if (friends == null)
+            {
+                var item = new Friend()
+                {
+                    UserId = target.Id,
+                    User = target,
+                    CurrentFriend = Friend,
+                    CurrentFriendId = Friend.Id,
+                };
+                Create(item);
+                //await CreateAsync(item);
+            }
+        }
+
+        public async Task AddFriendAsync(User target, User Friend)
         {
             var friends = Set.AsEnumerable().FirstOrDefault(x => x.UserId == target.Id && x.CurrentFriendId == Friend.Id);
 
@@ -27,9 +44,11 @@ namespace Part3_Mod35.Data.Repository
                     CurrentFriendId = Friend.Id,
                 };
                 //Create(item);
-                Create(item);
+                await CreateAsync(item);
             }
         }
+
+
 
         public List<User> GetFriendsByUser(User target)
         {
@@ -46,15 +65,32 @@ namespace Part3_Mod35.Data.Repository
             return friends.ToList();
         }
 
+        public async Task<List<User>> GetFriendsByUserAsync(User target)
+        {
+            IEnumerable<User> friends = null;
+            friends = Set.Include(x => x.CurrentFriend).AsEnumerable().Where(x => x.UserId == target.Id).Select(x => x.CurrentFriend);
+
+            return friends.ToList();
+        }
+
 
         public void DeleteFriend(User target, User Friend)
         {
             var friends = Set.AsEnumerable().FirstOrDefault(x => x.UserId == target.Id && x.CurrentFriendId == Friend.Id);
             if (friends != null)
             {
-                Delete (friends);
-                //Delete(friends);
+                Delete(friends);
             }
         }
+
+        public async Task DeleteFriendAsync(User target, User Friend)
+        {
+            var friends = Set.AsEnumerable().FirstOrDefault(x => x.UserId == target.Id && x.CurrentFriendId == Friend.Id);
+            if (friends != null)
+            {
+                await DeleteAsync(friends);
+            }
+        }
+
     }
 }

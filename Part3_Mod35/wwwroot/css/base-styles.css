@@ -86,16 +86,22 @@
 }
 
 .friendcontainer {
-    overflow: hidden;
+    /*overflow:scroll*/
+    margin: 5px;
 }
 
 .friendbox {
-    white-space: nowrap
+    white-space: nowrap;
+    display:flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+
 }
 
 .friendbox .datadiv {
         display: inline-block;
         max-width: 150px;
+        padding: 3px;
 }
 
 

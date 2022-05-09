@@ -21,34 +21,34 @@ namespace Part3_Mod35.Data.Repository
             Set = set;
         }
 
-        //public Task CreateAsync(T item)
-        //{
-        //    Set.AddAsync(item);
-        //    _db.SaveChangesAsync();
-        //    return Task.CompletedTask;
-        //}
+        public Task CreateAsync(T item)
+        {
+            Set.Add(item);
+            _db.SaveChangesAsync();
+            return Task.CompletedTask;
+        }
 
-        //public async Task DeleteAsync(T item)
-        //{
-        //    Set.Remove(item);
-        //    await _db.SaveChangesAsync();
-        //}
+        public async Task DeleteAsync(T item)
+        {
+            Set.Remove(item);
+            await _db.SaveChangesAsync();
+        }
 
-        //public async Task<T> GetAsync(int id)
+        public async Task<T> GetAsync(int id) => await Set.FindAsync(id);
         //{
         //    return await Set.FindAsync(id);
         //}
 
-        //public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync() => Set;
         //{
         //    return Set;
         //}
 
-        //public async Task UpdateAsync(T item)
-        //{
-        //    Set.Update(item);
-        //    await _db.SaveChangesAsync();
-        //}
+        public async Task UpdateAsync(T item)
+        {
+            Set.Update(item);
+            await _db.SaveChangesAsync();
+        }
 
         //Old sync methods
         //public Repository(ApplicationDbContext db)

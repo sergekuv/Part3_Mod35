@@ -7,11 +7,11 @@ namespace Part3_Mod35.Data.Repository
 {
     public interface IRepository<T> where T : class
     {
-        //Task<IEnumerable<T>> GetAllAsync();
-        //Task<T> GetAsync(int id);
-        //Task CreateAsync(T item);
-        //Task UpdateAsync(T item);
-        //Task DeleteAsync(T item);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int id);
+        Task CreateAsync(T item);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(T item);
 
         //Old sync methods
         IEnumerable<T> GetAll();

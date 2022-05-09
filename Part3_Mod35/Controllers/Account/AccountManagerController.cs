@@ -189,7 +189,7 @@ namespace Part3_Mod35.Controllers.Account
 
             var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
 
-            repository.AddFriend(result, friend);
+            await repository.AddFriendAsync(result, friend);
 
 
             return RedirectToAction("MyPage", "AccountManager");
@@ -242,7 +242,7 @@ namespace Part3_Mod35.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> ChatMessageList(string id)
         {
-            var model = await GenerateChat(id);
+            var model = await GenerateChatAsync(id);
             //string st = "Chat?id=401b8c06-2730-406c-8edd-441aa94f121d";
             //string st1 = "@\"<iframe name='myIframe' id='myIframe' width='100%' height='300' src='ChatMessageList?id=" + id + "'></iframe>\"";
             //ViewData["Iframe"] = @"<iframe name='myIframe' id='myIframe' width='100%' height='300' src='@st'></iframe>";
@@ -257,12 +257,32 @@ namespace Part3_Mod35.Controllers.Account
         [HttpPost]
         public async Task<IActionResult> Chat(string id)
         {
-            var model = await GenerateChat(id);
+            var model = await GenerateChatAsync(id);
             //string st1 = "@\"<iframe name='myIframe' id='myIframe' width='100%' height='300' src='ChatMessageList?id=" + id + "'></iframe>\"";
             //ViewData["Iframe"] = @"<iframe name='myIframe' id='myIframe' width='100%' height='300' src='@st'></iframe>";
             //ViewData["Iframe"] = st1;
 
             return View("Chat", model);
+        }
+
+        private async Task<ChatViewModel> GenerateChatAsync(string id)
+        {
+            var currentuser = User;
+
+            var result = await _userManager.GetUserAsync(currentuser);
+            var friend = await _userManager.FindByIdAsync(id);
+
+            var repository = _unitOfWork.GetRepository<Message>() as MessageRepository;
+            var mess = await repository.GetMessagesAsync(result, friend);
+
+            var model = new ChatViewModel()
+            {
+                You = result,
+                ToWhom = friend,
+                History = mess.OrderBy(x => x.Id).ToList(),
+            };
+
+            return model;
         }
 
         private async Task<ChatViewModel> GenerateChat(string id)
@@ -273,7 +293,7 @@ namespace Part3_Mod35.Controllers.Account
             var friend = await _userManager.FindByIdAsync(id);
 
             var repository = _unitOfWork.GetRepository<Message>() as MessageRepository;
-            var mess = repository.GetMessages(result, friend);
+            var mess =  repository.GetMessages(result, friend);
 
             var model = new ChatViewModel()
             {
@@ -313,12 +333,12 @@ namespace Part3_Mod35.Controllers.Account
                     Recipient = friend,
                     Text = chat.NewMessage.Text,
                 };
+                //await repository.CreateAsync(item);
                 repository.Create(item);
-                //repository.Create(item);
                 ModelState.Clear(); 
             }
 
-            var model = await GenerateChat(id);
+            ChatViewModel model = await GenerateChat(id);
             return View("Chat", model);
         }
     }
