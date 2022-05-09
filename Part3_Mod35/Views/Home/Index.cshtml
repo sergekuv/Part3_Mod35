@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Part3_Mod35.Models.Users;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager;
+
+@model Part3_Mod35.ViewModels.Account.MainViewModel;
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    //редирект
+    ViewData["Title"] = "MyPage";
+}
+else
+{
+    <div class="row">
+        <div class="side">
+            <div class="center">
+                Регистрируйтесь, делитесь мыслями, находите друзей!
+                @*<img class="main-img" src="http://pngimg.com/uploads/husky/husky_PNG19.png" />*@
+                <img class="main-img" src="../Static/500.png" />
+            </div>
+
+        </div>
+
+        <div class="main">
+            <partial name="Login" model="@Model.LoginView" />
+            <partial name="Register" model="@Model.RegisterView" />
+        </div>
+    </div>
+}
